@@ -54,16 +54,16 @@ export default function OrderDetails() {
     setOrder((prev) => (prev ? { ...prev, status: newStatus } : prev));
   }
 
-  if (loading) return <p className="p-4">Loading order details...</p>;
-  if (!order) return <p className="p-4">Order not found.</p>;
+  if (loading) return <p className="p-4 text-gray-800">Loading order details...</p>;
+  if (!order) return <p className="p-4 text-gray-800">Order not found.</p>;
 
   return (
-    <div className="p-4 space-y-6 max-w-3xl mx-auto">
+    <div className="p-4 space-y-6 max-w-3xl mx-auto text-gray-900">
       <button
         onClick={() => router.back()}
-        className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 text-sm"
+        className="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300 text-sm font-medium"
       >
-        Back
+        ← Back
       </button>
 
       <h1 className="text-2xl font-bold">Order Details</h1>
@@ -106,10 +106,10 @@ export default function OrderDetails() {
           <button
             key={s}
             onClick={() => updateStatus(s)}
-            className={`px-4 py-2 text-sm rounded ${
+            className={`px-4 py-2 text-sm rounded transition ${
               order.status === s
                 ? "bg-blue-600 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
+                : "bg-gray-200 hover:bg-gray-300 text-gray-900"
             }`}
           >
             Mark as {s}
@@ -124,9 +124,10 @@ export default function OrderDetails() {
           <p>No products found.</p>
         ) : (
           <div className="overflow-x-auto">
+            {/* Desktop Table */}
             <table className="w-full text-sm border-collapse hidden md:table">
               <thead>
-                <tr className="bg-gray-100 text-left">
+                <tr className="bg-gray-100 text-left text-gray-800">
                   <th className="p-2 border">Name</th>
                   <th className="p-2 border">Quantity</th>
                   <th className="p-2 border">Price</th>
@@ -135,7 +136,7 @@ export default function OrderDetails() {
               </thead>
               <tbody>
                 {order.products.map((p, i) => (
-                  <tr key={i}>
+                  <tr key={i} className="text-gray-800">
                     <td className="p-2 border">{p.name}</td>
                     <td className="p-2 border">{p.quantity}</td>
                     <td className="p-2 border">₹ {(p.price / 100).toFixed(2)}</td>
@@ -147,12 +148,12 @@ export default function OrderDetails() {
               </tbody>
             </table>
 
-            {/* Mobile view */}
+            {/* Mobile Cards */}
             <div className="space-y-4 md:hidden">
               {order.products.map((p, i) => (
                 <div
                   key={i}
-                  className="border p-3 rounded bg-gray-50 flex flex-col space-y-1"
+                  className="border p-3 rounded bg-gray-50 flex flex-col space-y-1 text-gray-800"
                 >
                   <p><strong>Name:</strong> {p.name}</p>
                   <p><strong>Quantity:</strong> {p.quantity}</p>

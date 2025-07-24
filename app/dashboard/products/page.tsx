@@ -39,12 +39,12 @@ export default function ProductsPage() {
     }
   }
 
-  if (loading) return <p className="p-4 text-center">Loading products...</p>;
+  if (loading) return <p className="p-4 text-center text-gray-800">Loading products...</p>;
 
   return (
     <div className="p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h1 className="text-2xl font-bold">Products</h1>
+        <h1 className="text-2xl font-bold text-gray-900">Products</h1>
         <Link
           href="/dashboard/products/add"
           className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto text-center"
@@ -54,7 +54,7 @@ export default function ProductsPage() {
       </div>
 
       {products.length === 0 ? (
-        <p className="text-gray-600">No products found.</p>
+        <p className="text-gray-700 text-base">No products found.</p>
       ) : (
         <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {products.map((product) => (
@@ -68,13 +68,13 @@ export default function ProductsPage() {
                   alt={product.name}
                   className="w-full h-40 object-cover mb-3 rounded"
                 />
-                <h2 className="text-lg font-semibold">{product.name}</h2>
-                <p className="text-gray-700 mb-1">
+                <h2 className="text-lg font-semibold text-gray-900">{product.name}</h2>
+                <p className="text-gray-800 mb-1">
                   ₹ {(product.price / 100).toFixed(2)}
                 </p>
                 <p
                   className={`text-sm font-medium ${
-                    product.stock > 0 ? "text-green-600" : "text-red-500"
+                    product.stock > 0 ? "text-green-600" : "text-red-600"
                   }`}
                 >
                   {product.stock > 0
@@ -92,7 +92,7 @@ export default function ProductsPage() {
                 </Link>
                 <button
                   onClick={() => handleDelete(product.id)}
-                  className="bg-red-500 text-black px-4 py-2 rounded text-center hover:bg-red-600"
+                  className="bg-red-500 text-white px-4 py-2 rounded text-center hover:bg-red-600"
                 >
                   Delete
                 </button>

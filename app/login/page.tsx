@@ -32,9 +32,9 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <form
         onSubmit={handleLogin}
-        className="bg-white w-full max-w-sm p-6 rounded-lg shadow-md space-y-4"
+        className="bg-white w-full max-w-sm p-6 rounded-lg shadow space-y-5"
       >
-        <h1 className="text-2xl font-semibold text-center text-gray-800">
+        <h1 className="text-2xl font-bold text-center text-gray-900">
           Admin Login
         </h1>
 
@@ -43,7 +43,7 @@ export default function LoginPage() {
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
         />
 
         <input
@@ -51,13 +51,13 @@ export default function LoginPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-black w-full py-3 rounded hover:bg-blue-700 transition duration-200 disabled:bg-gray-400"
+          className="bg-blue-600 text-white w-full py-3 rounded hover:bg-blue-700 transition duration-200 disabled:bg-gray-400"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
