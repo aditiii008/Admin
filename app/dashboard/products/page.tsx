@@ -92,7 +92,7 @@ export default function ProductsPage() {
                 </Link>
                 <button
                   onClick={() => handleDelete(product.id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded text-center hover:bg-red-600"
+                  className="bg-red-500 text-black px-4 py-2 rounded text-center hover:bg-red-600"
                 >
                   Delete
                 </button>

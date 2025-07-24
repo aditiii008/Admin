@@ -122,7 +122,7 @@ export default function DashboardPage() {
                   <td className="p-2 border">
                     <Link
                       href={`/dashboard/orders/${order.id}`}
-                      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                      className="bg-blue-500 text-black px-3 py-1 rounded hover:bg-blue-600"
                     >
                       View
                     </Link>

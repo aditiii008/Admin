@@ -89,7 +89,7 @@ export default function EditProductPage() {
           onChange={(e) => setDescription(e.target.value)}
         />
         <button
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+          className="bg-green-600 text-black px-4 py-2 rounded hover:bg-green-700"
           type="submit"
         >
           Save Changes

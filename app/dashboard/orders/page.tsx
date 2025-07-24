@@ -90,7 +90,7 @@ export default function OrdersPage() {
                   <td className="p-2 border whitespace-nowrap">
                     <Link
                       href={`/dashboard/orders/${order.id}`}
-                      className="inline-block bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs"
+                      className="inline-block bg-blue-500 text-black px-3 py-1 rounded hover:bg-blue-600 text-xs"
                     >
                       View
                     </Link>
