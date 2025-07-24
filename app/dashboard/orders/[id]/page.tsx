@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 interface ProductItem {
   name: string;
   quantity: number;
-  price: number; 
+  price: number;
 }
 
 interface Order {
@@ -14,7 +14,7 @@ interface Order {
   customerName: string;
   customerEmail: string;
   customerPhone?: string;
-  customerAddress?: string; 
+  customerAddress?: string;
   total: number;
   status: string;
   products: ProductItem[];
@@ -32,7 +32,6 @@ export default function OrderDetails() {
       const res = await fetch(`/api/orders/${id}`);
       const data = await res.json();
 
-      
       const parsedOrder = {
         ...data,
         products: Array.isArray(data.products)
@@ -55,67 +54,59 @@ export default function OrderDetails() {
     setOrder((prev) => (prev ? { ...prev, status: newStatus } : prev));
   }
 
-  if (loading) return <p className="p-6">Loading order details...</p>;
-  if (!order) return <p className="p-6">Order not found.</p>;
+  if (loading) return <p className="p-4">Loading order details...</p>;
+  if (!order) return <p className="p-4">Order not found.</p>;
 
   return (
-    <div className="p-6 space-y-6">
-      
+    <div className="p-4 space-y-6 max-w-3xl mx-auto">
       <button
         onClick={() => router.back()}
-        className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+        className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400 text-sm"
       >
         Back
       </button>
 
-      
       <h1 className="text-2xl font-bold">Order Details</h1>
 
-      
-      <div className="bg-white shadow rounded p-4 space-y-2">
+      <div className="bg-white shadow rounded p-4 space-y-2 text-sm">
         <p><strong>Customer:</strong> {order.customerName}</p>
         <p><strong>Email:</strong> {order.customerEmail}</p>
         {order.customerPhone && <p><strong>Phone:</strong> {order.customerPhone}</p>}
 
-        
         {order.customerAddress && (
-        <div>
+          <div>
             <strong>Address:</strong>
             <div className="mt-1 p-2 bg-gray-100 rounded border space-y-1">
-            {(() => {
+              {(() => {
                 const address =
-                typeof order.customerAddress === "string"
+                  typeof order.customerAddress === "string"
                     ? JSON.parse(order.customerAddress)
                     : order.customerAddress;
                 return (
-                <>
+                  <>
                     <p>{address.fullName}</p>
                     <p>{address.street}</p>
-                    <p>
-                    {address.city}, {address.state} - {address.postalCode}
-                    </p>
+                    <p>{address.city}, {address.state} - {address.postalCode}</p>
                     <p>{address.country}</p>
                     {address.phone && <p>Phone: {address.phone}</p>}
-                </>
+                  </>
                 );
-            })()}
+              })()}
             </div>
-        </div>
+          </div>
         )}
-
 
         <p><strong>Total:</strong> ₹ {(order.total / 100).toFixed(2)}</p>
         <p><strong>Status:</strong> {order.status}</p>
         <p><strong>Placed on:</strong> {new Date(order.createdAt).toLocaleString()}</p>
       </div>
 
-      
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {["PENDING", "SHIPPED", "DELIVERED"].map((s) => (
           <button
             key={s}
             onClick={() => updateStatus(s)}
-            className={`px-4 py-2 rounded ${
+            className={`px-4 py-2 text-sm rounded ${
               order.status === s
                 ? "bg-blue-600 text-white"
                 : "bg-gray-200 hover:bg-gray-300"
@@ -126,34 +117,51 @@ export default function OrderDetails() {
         ))}
       </div>
 
-      
       <div className="bg-white shadow rounded p-4">
-        <h2 className="text-xl font-bold mb-4">Products</h2>
+        <h2 className="text-xl font-semibold mb-4">Products</h2>
+
         {order.products.length === 0 ? (
           <p>No products found.</p>
         ) : (
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100 text-left">
-                <th className="p-2 border">Name</th>
-                <th className="p-2 border">Quantity</th>
-                <th className="p-2 border">Price</th>
-                <th className="p-2 border">Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {order.products.map((p, i) => (
-                <tr key={i}>
-                  <td className="p-2 border">{p.name}</td>
-                  <td className="p-2 border">{p.quantity}</td>
-                  <td className="p-2 border">₹ {(p.price / 100).toFixed(2)}</td>
-                  <td className="p-2 border">
-                    ₹ {((p.price * p.quantity) / 100).toFixed(2)}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse hidden md:table">
+              <thead>
+                <tr className="bg-gray-100 text-left">
+                  <th className="p-2 border">Name</th>
+                  <th className="p-2 border">Quantity</th>
+                  <th className="p-2 border">Price</th>
+                  <th className="p-2 border">Subtotal</th>
                 </tr>
+              </thead>
+              <tbody>
+                {order.products.map((p, i) => (
+                  <tr key={i}>
+                    <td className="p-2 border">{p.name}</td>
+                    <td className="p-2 border">{p.quantity}</td>
+                    <td className="p-2 border">₹ {(p.price / 100).toFixed(2)}</td>
+                    <td className="p-2 border">
+                      ₹ {((p.price * p.quantity) / 100).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+
+            {/* Mobile view */}
+            <div className="space-y-4 md:hidden">
+              {order.products.map((p, i) => (
+                <div
+                  key={i}
+                  className="border p-3 rounded bg-gray-50 flex flex-col space-y-1"
+                >
+                  <p><strong>Name:</strong> {p.name}</p>
+                  <p><strong>Quantity:</strong> {p.quantity}</p>
+                  <p><strong>Price:</strong> ₹ {(p.price / 100).toFixed(2)}</p>
+                  <p><strong>Subtotal:</strong> ₹ {((p.price * p.quantity) / 100).toFixed(2)}</p>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+          </div>
         )}
       </div>
     </div>

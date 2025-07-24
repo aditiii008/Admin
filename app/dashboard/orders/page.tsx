@@ -31,22 +31,22 @@ export default function OrdersPage() {
       ? orders
       : orders.filter((o) => o.status.toUpperCase() === filter);
 
-  if (loading) return <p className="p-6">Loading orders...</p>;
+  if (loading) return <p className="p-4 text-center">Loading orders...</p>;
 
   return (
-    <div className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Orders</h1>
+    <div className="p-4 space-y-6">
+      <h1 className="text-2xl font-bold text-gray-800">Orders</h1>
 
       {/* Filter Buttons */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {["ALL", "PENDING", "SHIPPED", "DELIVERED"].map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`px-4 py-2 rounded ${
+            className={`px-4 py-2 rounded text-sm font-medium transition ${
               filter === f
                 ? "bg-blue-600 text-white"
-                : "bg-gray-200 hover:bg-gray-300"
+                : "bg-gray-200 text-gray-700 hover:bg-gray-300"
             }`}
           >
             {f}
@@ -56,39 +56,50 @@ export default function OrdersPage() {
 
       {/* Orders Table */}
       {filteredOrders.length === 0 ? (
-        <p>No orders found.</p>
+        <p className="text-gray-500">No orders found.</p>
       ) : (
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-gray-100 text-left">
-              <th className="p-2 border">Customer</th>
-              <th className="p-2 border">Total</th>
-              <th className="p-2 border">Status</th>
-              <th className="p-2 border">Date</th>
-              <th className="p-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredOrders.map((order) => (
-              <tr key={order.id}>
-                <td className="p-2 border">{order.customerName}</td>
-                <td className="p-2 border">₹ {(order.total / 100).toFixed(2)}</td>
-                <td className="p-2 border">{order.status}</td>
-                <td className="p-2 border">
-                  {new Date(order.createdAt).toLocaleDateString()}
-                </td>
-                <td className="p-2 border">
-                  <Link
-                    href={`/dashboard/orders/${order.id}`}
-                    className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
-                  >
-                    View
-                  </Link>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border border-gray-200 text-sm">
+            <thead>
+              <tr className="bg-gray-100 text-gray-700">
+                <th className="p-2 border">Customer</th>
+                <th className="p-2 border">Total</th>
+                <th className="p-2 border">Status</th>
+                <th className="p-2 border">Date</th>
+                <th className="p-2 border">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredOrders.map((order) => (
+                <tr
+                  key={order.id}
+                  className="hover:bg-gray-50 transition-colors"
+                >
+                  <td className="p-2 border whitespace-nowrap">
+                    {order.customerName}
+                  </td>
+                  <td className="p-2 border whitespace-nowrap">
+                    ₹ {(order.total / 100).toFixed(2)}
+                  </td>
+                  <td className="p-2 border whitespace-nowrap">
+                    {order.status}
+                  </td>
+                  <td className="p-2 border whitespace-nowrap">
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </td>
+                  <td className="p-2 border whitespace-nowrap">
+                    <Link
+                      href={`/dashboard/orders/${order.id}`}
+                      className="inline-block bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-xs"
+                    >
+                      View
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

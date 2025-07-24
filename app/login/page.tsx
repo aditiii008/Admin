@@ -29,30 +29,35 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <form
         onSubmit={handleLogin}
-        className="bg-white p-6 rounded shadow w-80 space-y-4"
+        className="bg-white w-full max-w-sm p-6 rounded-lg shadow-md space-y-4"
       >
-        <h1 className="text-xl font-bold text-center">Admin Login</h1>
+        <h1 className="text-2xl font-semibold text-center text-gray-800">
+          Admin Login
+        </h1>
+
         <input
           type="text"
           placeholder="Username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="border p-2 w-full"
+          className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+
         <input
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border p-2 w-full"
+          className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white w-full p-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
+          className="bg-blue-600 text-white w-full py-3 rounded hover:bg-blue-700 transition duration-200 disabled:bg-gray-400"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
