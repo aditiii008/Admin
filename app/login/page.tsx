@@ -13,21 +13,19 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
 
-    
-    // const res = await fetch("/api/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ username, password }),
-    // });
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
 
-    // if (res.ok) {
-    //   router.push("/dashboard");
-    // } else {
-    //   alert("Invalid credentials!");
-    // }
-
-    router.push("/dashboard"); 
     setLoading(false);
+
+    if (res.ok) {
+      router.push("/dashboard");
+    } else {
+      alert("Invalid credentials!");
+    }
   }
 
   return (
@@ -42,7 +40,7 @@ export default function LoginPage() {
 
         <input
           type="text"
-          placeholder="Username"
+          placeholder="Username : admin"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
@@ -50,7 +48,7 @@ export default function LoginPage() {
 
         <input
           type="password"
-          placeholder="Password"
+          placeholder="Password : admin123"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="border border-gray-300 p-3 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
