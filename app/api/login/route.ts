@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
   if (username === validUsername && password === validPassword) {
     const res = NextResponse.json({ success: true });
-    // Set cookie for authentication
+    
     res.cookies.set("admin-auth", "true", { path: "/" });
     return res;
   }
