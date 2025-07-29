@@ -22,6 +22,11 @@ interface Order {
   createdAt: string;
 }
 
+interface UpdateStatusBody {
+  status: string;
+  trackingUrl?: string;
+}
+
 export default function OrderDetails() {
   const { id } = useParams();
   const router = useRouter();
@@ -49,7 +54,7 @@ export default function OrderDetails() {
   }, [id]);
 
   async function updateStatus(newStatus: string) {
-    const body: any = { status: newStatus };
+    const body: UpdateStatusBody = { status: newStatus };
 
     // ✅ Always include tracking URL if it's provided
     if (trackingUrl.trim()) {
