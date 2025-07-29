@@ -17,6 +17,7 @@ interface Order {
   customerAddress?: string;
   total: number;
   status: string;
+  trackingUrl?: string;
   products: ProductItem[];
   createdAt: string;
 }
@@ -26,6 +27,7 @@ export default function OrderDetails() {
   const router = useRouter();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
+  const [trackingUrl, setTrackingUrl] = useState("");
 
   useEffect(() => {
     async function fetchOrder() {
@@ -40,18 +42,50 @@ export default function OrderDetails() {
       };
 
       setOrder(parsedOrder);
+      setTrackingUrl(data.trackingUrl || "");
       setLoading(false);
     }
     fetchOrder();
   }, [id]);
 
   async function updateStatus(newStatus: string) {
+    const body: any = { status: newStatus };
+
+    // ✅ Always include tracking URL if it's provided
+    if (trackingUrl.trim()) {
+      body.trackingUrl = trackingUrl.trim();
+    }
+
     await fetch(`/api/orders/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: newStatus }),
+      body: JSON.stringify(body),
     });
-    setOrder((prev) => (prev ? { ...prev, status: newStatus } : prev));
+
+    setOrder((prev) =>
+      prev
+        ? {
+            ...prev,
+            status: newStatus,
+            trackingUrl: body.trackingUrl ?? prev.trackingUrl,
+          }
+        : prev
+    );
+  }
+
+  async function updateTrackingOnly() {
+    const trimmedUrl = trackingUrl.trim();
+    if (!trimmedUrl) return;
+
+    await fetch(`/api/orders/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ trackingUrl: trimmedUrl }),
+    });
+
+    setOrder((prev) =>
+      prev ? { ...prev, trackingUrl: trimmedUrl } : prev
+    );
   }
 
   if (loading) return <p className="p-4 text-gray-800">Loading order details...</p>;
@@ -72,7 +106,6 @@ export default function OrderDetails() {
         <p><strong>Customer:</strong> {order.customerName}</p>
         <p><strong>Email:</strong> {order.customerEmail}</p>
         {order.customerPhone && <p><strong>Phone:</strong> {order.customerPhone}</p>}
-
         {order.customerAddress && (
           <div>
             <strong>Address:</strong>
@@ -95,36 +128,71 @@ export default function OrderDetails() {
             </div>
           </div>
         )}
-
         <p><strong>Total:</strong> ₹ {(order.total / 100).toFixed(2)}</p>
         <p><strong>Status:</strong> {order.status}</p>
         <p><strong>Placed on:</strong> {new Date(order.createdAt).toLocaleString()}</p>
+
+        {order.trackingUrl && (
+          <p>
+            <strong>Tracking:</strong>{" "}
+            <a
+              href={order.trackingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
+              Track Order
+            </a>
+          </p>
+        )}
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {["PENDING", "SHIPPED", "DELIVERED"].map((s) => (
-          <button
-            key={s}
-            onClick={() => updateStatus(s)}
-            className={`px-4 py-2 text-sm rounded transition ${
-              order.status === s
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 hover:bg-gray-300 text-gray-900"
-            }`}
-          >
-            Mark as {s}
-          </button>
-        ))}
-      </div>
+      {order.status !== "DELIVERED" && (
+        <>
+          <div className="flex flex-wrap gap-2">
+            {["PENDING", "SHIPPED", "DELIVERED"].map((s) => (
+              <button
+                key={s}
+                onClick={() => updateStatus(s)}
+                className={`px-4 py-2 text-sm rounded transition ${
+                  order.status === s
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 hover:bg-gray-300 text-gray-900"
+                }`}
+              >
+                Mark as {s}
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-4">
+            <label className="block text-sm font-medium mb-1">
+              Tracking URL (for SHIPPED orders)
+            </label>
+            <input
+              type="text"
+              value={trackingUrl}
+              onChange={(e) => setTrackingUrl(e.target.value)}
+              placeholder="https://example.com/track/..."
+              className="w-full border px-3 py-2 rounded text-sm"
+            />
+
+            <button
+              onClick={updateTrackingOnly}
+              className="mt-2 px-4 py-2 bg-green-600 text-white rounded text-sm hover:bg-green-700"
+            >
+              Save Tracking URL
+            </button>
+          </div>
+        </>
+      )}
 
       <div className="bg-white shadow rounded p-4">
         <h2 className="text-xl font-semibold mb-4">Products</h2>
-
         {order.products.length === 0 ? (
           <p>No products found.</p>
         ) : (
           <div className="overflow-x-auto">
-            {/* Desktop Table */}
             <table className="w-full text-sm border-collapse hidden md:table">
               <thead>
                 <tr className="bg-gray-100 text-left text-gray-800">
@@ -148,7 +216,6 @@ export default function OrderDetails() {
               </tbody>
             </table>
 
-            {/* Mobile Cards */}
             <div className="space-y-4 md:hidden">
               {order.products.map((p, i) => (
                 <div

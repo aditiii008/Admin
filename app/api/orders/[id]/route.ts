@@ -25,12 +25,22 @@ export async function PATCH(
   context: { params: Promise<{ id: string }> }
 ) {
   const { id } = await context.params;
-  const { status } = await req.json();
+  const { status, trackingUrl } = await req.json();
 
-  const updatedOrder = await prisma.order.update({
-    where: { id },
-    data: { status },
-  });
+  try {
+    const updatedOrder = await prisma.order.update({
+      where: { id },
+      data: {
+        status,
+        trackingUrl, // Save tracking link if provided
+      },
+    });
 
-  return NextResponse.json(updatedOrder);
+    return NextResponse.json(updatedOrder);
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Failed to update order" },
+      { status: 500 }
+    );
+  }
 }
